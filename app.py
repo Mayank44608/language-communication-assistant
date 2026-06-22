@@ -1,7 +1,13 @@
 import streamlit as st
 from deep_translator import GoogleTranslator
 
+st.set_page_config(
+    page_title="Language Communication Assistant",
+    page_icon="🌍"
+)
+
 st.title("🌍 Language Communication Assistant")
+st.write("Translate text between multiple languages.")
 
 languages = {
     "English": "en",
@@ -12,35 +18,49 @@ languages = {
     "Malayalam": "ml"
 }
 
-source = st.selectbox(
-    "Source Language",
-    list(languages.keys())
-)
+col1, col2 = st.columns(2)
 
-target = st.selectbox(
-    "Target Language",
-    list(languages.keys()),
-    index=1
-)
+with col1:
+    source = st.selectbox(
+        "Source Language",
+        list(languages.keys())
+    )
 
-text = st.text_area("Enter Text")
+with col2:
+    target = st.selectbox(
+        "Target Language",
+        list(languages.keys()),
+        index=1
+    )
+
+text = st.text_area(
+    "Enter Text",
+    height=150
+)
 
 if st.button("Translate"):
 
-    if text.strip():
+    if source == target:
+        st.error("Source and Target languages cannot be the same.")
 
-        translated = GoogleTranslator(
-            source=languages[source],
-            target=languages[target]
-        ).translate(text)
+    elif text.strip():
 
-        st.success("Translation Complete")
+        try:
+            translated = GoogleTranslator(
+                source=languages[source],
+                target=languages[target]
+            ).translate(text)
 
-        st.text_area(
-            "Translated Text",
-            translated,
-            height=150
-        )
+            st.success("Translation Complete")
+
+            st.text_area(
+                "Translated Text",
+                translated,
+                height=150
+            )
+
+        except Exception as e:
+            st.error(f"Translation failed: {e}")
 
     else:
-        st.warning("Please enter text")
+        st.warning("Please enter text.")
