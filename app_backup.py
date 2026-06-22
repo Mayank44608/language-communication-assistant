@@ -47,8 +47,8 @@ if st.button("Translate"):
 
         try:
             translated = GoogleTranslator(
-            source="auto",
-            target=languages[target]
+                source=languages[source],
+                target=languages[target]
             ).translate(text)
 
             st.success("Translation Complete")
